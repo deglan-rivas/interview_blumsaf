@@ -31,14 +31,11 @@ describe('CustomersController', () => {
       } as unknown as APIGatewayProxyEvent);
 
       // Validate
-      expect(response).toEqual([
-        {
-          id: 'customerId',
-          name: 'name',
-          lastName: 'lastName',
-          email: 'email',
-        },
-      ]);
+      expect(response).toEqual({
+        statusCode: 200,
+        isBase64Encoded: false,
+        body: '[{"id":"customerId","name":"name","lastName":"lastName","email":"email"}]',
+      });
       expect(service.findByFilter).toBeCalledWith({
         name: 'A',
       });
