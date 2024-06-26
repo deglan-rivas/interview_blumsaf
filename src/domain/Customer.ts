@@ -1,15 +1,38 @@
-export class Customer {
-  id: string;
-
+// TODO default values as empty string or undefined types ¿?
+interface CustomerOptions {
+  id?: string | null;
   name: string;
+  lastName?: string;
+  email?: string;
+  phone?: string;
+}
 
-  lastName: string;
+export class Customer {
+  private readonly id: string | null;
 
-  email: string;
+  private readonly name: string;
 
-  constructor(data?: Partial<Customer>) {
-    if (data) {
-      Object.assign(this, data);
-    }
+  private readonly lastName: string;
+
+  private readonly email: string;
+
+  private readonly phone: string;
+
+  constructor({
+    id = '',
+    name,
+    lastName = '',
+    email = '',
+    phone = '',
+  }: CustomerOptions) {
+    this.id = id;
+    this.name = name;
+    this.lastName = lastName;
+    this.email = email;
+    this.phone = phone;
+  }
+
+  getName(): string {
+    return this.name;
   }
 }

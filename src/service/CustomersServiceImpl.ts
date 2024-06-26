@@ -1,17 +1,11 @@
-import { CustomersService } from './CustomersService';
-import { CustomersRepository } from '../repository/CustomersRepository';
 import { Customer } from '../domain/Customer';
+import { CustomersRepositoryImpl } from '../repository/CustomersRepositoryImpl';
+import { CustomersService } from './CustomersService';
 
 export class CustomersServiceImpl implements CustomersService {
-  constructor(private repository: CustomersRepository) {}
+  constructor(private repository: CustomersRepositoryImpl) { }
 
   async findByFilter(customer: Customer): Promise<Customer[]> {
-    return (await this.repository.findByFilter(customer)).map(
-      (item) =>
-        new Customer({
-          ...item,
-          email: `${item.name.charAt(0)}${item.lastName}@miblum.com`,
-        })
-    );
+    return this.repository.findByFilter(customer);
   }
 }

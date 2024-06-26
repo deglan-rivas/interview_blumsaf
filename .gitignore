@@ -4,3 +4,7 @@ coverage
 .idea
 dist
 junit.xml
+
+pnpm-lock.yaml
+dist/
+.vscode

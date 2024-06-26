@@ -1,28 +1,26 @@
 import axios from 'axios';
-import { CustomersRepository } from './CustomersRepository';
 import { Customer } from '../domain/Customer';
-
-type RandomUser = {
-  id: {
-    value: string;
-  };
-  name: {
-    first: string;
-
-    last: string;
-  };
-};
+import { RandomUsersSchema } from '../schemas';
+import { RandomUser } from '../types';
+import { CustomersRepository } from './CustomersRepository';
 
 export class CustomersRepositoryImpl implements CustomersRepository {
   async findByFilter(customer: Customer): Promise<Customer[]> {
     const result = await axios.get('https://randomuser.me/api/?results=100');
-    if (!result.data.results) {
-      return [];
-    }
 
-    return result.data.results
+    const validatedUsers = RandomUsersSchema.safeParse(result.data?.results);
+    if (!validatedUsers.success) {
+      throw new Error(validatedUsers.error.message);
+    }
+    // if (!result.data.results) {
+    //   return [];
+    // }
+
+    return validatedUsers.data
       .filter((item: RandomUser) =>
-        item.name.first.toLowerCase().startsWith(customer.name.toLowerCase())
+        item.name.first
+          .toLowerCase()
+          .startsWith(customer.getName().toLowerCase())
       )
       .map(
         (item: RandomUser) =>
@@ -30,6 +28,8 @@ export class CustomersRepositoryImpl implements CustomersRepository {
             id: item.id.value,
             name: item.name.first,
             lastName: item.name.last,
+            email: `${item.name.first.charAt(0)}${item.name.last}@miblum.com`,
+            phone: item.phone,
           })
       );
   }
