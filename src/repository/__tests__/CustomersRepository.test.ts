@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { CustomersRepositoryImpl } from '../CustomersRepositoryImpl';
 import { Customer } from '../../domain/Customer';
+import { CustomersRepositoryImpl } from '../CustomersRepositoryImpl';
 
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
@@ -93,6 +93,8 @@ describe('CustomersRepositoryImpl', () => {
           id: '0390511T',
           name: 'brad',
           lastName: 'gibson',
+          email: 'bgibson@miblum.com',
+          phone: '011-962-7516',
         },
       ]);
     });

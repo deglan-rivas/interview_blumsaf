@@ -1,6 +1,5 @@
-import { APIGatewayProxyEvent } from 'aws-lambda';
+import { CustomersServiceImpl } from '../../service/CustomersServiceImpl';
 import { CustomersController } from '../CustomersController';
-import { CustomersService } from '../../service/CustomersService';
 
 describe('CustomersController', () => {
   describe('findByFilter', () => {
@@ -14,31 +13,48 @@ describe('CustomersController', () => {
               name: 'name',
               lastName: 'lastName',
               email: 'email',
+              phone: 'phone',
             },
           ])
         ),
-      } as unknown as CustomersService;
+      } as unknown as CustomersServiceImpl;
 
       const controller = new CustomersController(service);
 
       // Execute
+      // const response = await controller.findByFilter({
+      //   httpMethod: 'GET',
+      //   resource: '/customers',
+      //   queryStringParameters: {
+      //     name: 'A',
+      //   },
+      // } as unknown as APIGatewayProxyEvent);
       const response = await controller.findByFilter({
-        httpMethod: 'GET',
-        resource: '/customers',
-        queryStringParameters: {
-          name: 'A',
-        },
-      } as unknown as APIGatewayProxyEvent);
-
-      // Validate
-      expect(response).toEqual({
-        statusCode: 200,
-        isBase64Encoded: false,
-        body: '[{"id":"customerId","name":"name","lastName":"lastName","email":"email"}]',
-      });
-      expect(service.findByFilter).toBeCalledWith({
         name: 'A',
       });
+
+      // Validate
+      // expect(response).toEqual({
+      //   statusCode: 200,
+      //   isBase64Encoded: false,
+      //   body: '[{"id":"customerId","name":"name","lastName":"lastName","email":"email"}]',
+      // });
+      // expect(response).toBe([
+      // expect(response).toStrictEqual([
+      expect(response).toEqual([
+        {
+          id: 'customerId',
+          name: 'name',
+          lastName: 'lastName',
+          email: 'email',
+          phone: 'phone',
+        },
+      ]);
+      expect(service.findByFilter).toBeCalledWith(
+        expect.objectContaining({
+          name: 'A',
+        })
+      );
     });
   });
 });

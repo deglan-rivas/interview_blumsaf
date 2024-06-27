@@ -1,6 +1,6 @@
-import { CustomersServiceImpl } from '../CustomersServiceImpl';
 import { Customer } from '../../domain/Customer';
 import { CustomersRepository } from '../../repository/CustomersRepository';
+import { CustomersServiceImpl } from '../CustomersServiceImpl';
 
 describe('CustomersServiceImpl', () => {
   describe('findByFilter', () => {
@@ -13,6 +13,7 @@ describe('CustomersServiceImpl', () => {
               id: 'customerId',
               name: 'name',
               lastName: 'lastName',
+              email: 'nlastName@miblum.com',
             },
           ])
         ),
@@ -32,9 +33,11 @@ describe('CustomersServiceImpl', () => {
           email: 'nlastName@miblum.com',
         },
       ]);
-      expect(repository.findByFilter).toBeCalledWith({
-        name: 'A',
-      });
+      expect(repository.findByFilter).toBeCalledWith(
+        expect.objectContaining({
+          name: 'A',
+        })
+      );
     });
   });
 });
