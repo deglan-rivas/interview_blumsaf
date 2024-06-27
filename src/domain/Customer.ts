@@ -1,4 +1,3 @@
-// TODO default values as empty string or undefined types ¿?
 interface CustomerOptions {
   id?: string | null;
   name: string;

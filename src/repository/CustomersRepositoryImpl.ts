@@ -12,9 +12,6 @@ export class CustomersRepositoryImpl implements CustomersRepository {
     if (!validatedUsers.success) {
       throw new Error(validatedUsers.error.message);
     }
-    // if (!result.data.results) {
-    //   return [];
-    // }
 
     return validatedUsers.data
       .filter((item: RandomUser) =>

@@ -1,43 +1,26 @@
 import { Customer } from '../../domain/Customer';
-import { CustomersRepository } from '../../repository/CustomersRepository';
 import { CustomersServiceImpl } from '../CustomersServiceImpl';
 
 describe('CustomersServiceImpl', () => {
   describe('findByFilter', () => {
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
     it('should return customers', async () => {
-      // Prepare
-      const repository = {
-        findByFilter: jest.fn(() =>
-          Promise.resolve([
-            {
-              id: 'customerId',
-              name: 'name',
-              lastName: 'lastName',
-              email: 'nlastName@miblum.com',
-            },
-          ])
-        ),
-      } as unknown as CustomersRepository;
+      // ARRANGE
+      const customer = new Customer({ name: 'A' });
+      const mockRepository = {
+        findByFilter: jest.fn().mockResolvedValue([customer]),
+      };
+      const customerService = new CustomersServiceImpl(mockRepository);
 
-      const service = new CustomersServiceImpl(repository);
+      // ACT
+      const response = await customerService.findByFilter(customer);
 
-      // Execute
-      const response = await service.findByFilter(new Customer({ name: 'A' }));
-
-      // Validate
-      expect(response).toEqual([
-        {
-          id: 'customerId',
-          name: 'name',
-          lastName: 'lastName',
-          email: 'nlastName@miblum.com',
-        },
-      ]);
-      expect(repository.findByFilter).toBeCalledWith(
-        expect.objectContaining({
-          name: 'A',
-        })
-      );
+      // ASSERT
+      expect(response).toEqual([customer]);
+      expect(mockRepository.findByFilter).toHaveBeenCalledWith(customer);
     });
   });
 });
